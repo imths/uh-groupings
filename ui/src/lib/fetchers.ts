@@ -161,19 +161,6 @@ export const optInGroupingPaths = async (): Promise<GroupingPaths & ApiError> =>
 };
 
 /**
- * Get a list of owners in the current path.
- *
- * @param groupingPath - The path of the grouping
- *
- * @returns The promise of the grouping group members or ApiError type
- */
-export const groupingOwners = async (groupingPath: string): Promise<GroupingGroupMembers & ApiError> => {
-    const currentUser = await getCurrentUser();
-    const endpoint = `${baseUrl}/grouping/${groupingPath}/owners`;
-    return getRequest<GroupingGroupMembers>(endpoint, currentUser.uid);
-};
-
-/**
  * Get the groupings the current user owns.
  *
  * @returns The promise of the grouping paths or ApiError type
