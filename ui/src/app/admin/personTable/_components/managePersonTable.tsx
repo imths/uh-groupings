@@ -24,24 +24,24 @@ import PersonTableTooltip from '@/app/admin/personTable/_components/personTableT
 import Link from 'next/link';
 import { groupingOwners } from '@/lib/actions';
 import TestingModal from '@/components/modal/testing-modal';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const pageSize = parseInt(process.env.NEXT_PUBLIC_PAGE_SIZE as string);
 
-// const managePersonTable = ({ data }: { data: Membership[] }, { results }: { results: MemberResult[] }) => {
 const ManagePersonTable = (data) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState<SortingState>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState([]);
-    // console.log(data.groupingsInfo);
-    // console.log(data.userInfo);
-    const groupingsInfo = data.groupingsInfo;
+    const [dummyBool, setDummyBool] = useState(false);
+    const searchUid = data.searchUid;
+    const validUid = data.groupingsInfo.resultCode;
+    const groupingsInfo = data.groupingsInfo.results;
     const userInfo = data.userInfo;
+    console.log(userInfo);
     const testing = async (path) => {
-        // console.log((await groupingOwners(path)).members);
         setModalData((await groupingOwners(path)).members);
-        console.log(modalData);
         setModalOpen(true);
     };
 
@@ -88,8 +88,22 @@ const ManagePersonTable = (data) => {
                             className="mx-2"
                             type="checkbox"
                             name="checkAll"
-                            checked={table.getIsAllPageRowsSelected()}
-                            onChange={table.getToggleAllPageRowsSelectedHandler()}
+                            checked={
+                                // groupingsInfo === [] ||
+                                // groupingsInfo === undefined ||
+                                // searchUid === '' ||
+                                // searchUid === null
+                                userInfo === undefined ? dummyBool : table.getIsAllPageRowsSelected()
+                            }
+                            onChange={
+                                // groupingsInfo === [] ||
+                                // groupingsInfo === undefined ||
+                                // searchUid === '' ||
+                                // searchUid === null
+                                userInfo === undefined
+                                    ? () => setDummyBool(!dummyBool)
+                                    : table.getToggleAllPageRowsSelectedHandler()
+                            }
                         />
                         <Button
                             className="rounded-[-0.25rem] rounded-r-[0.25rem]"
@@ -105,6 +119,30 @@ const ManagePersonTable = (data) => {
                     </div>
                 </label>
             </div>
+            {validUid === 'FAILURE' && searchUid !== undefined ? (
+                <Alert variant="destructive" className="w-fit mb-7">
+                    <AlertDescription>{searchUid} is not in any grouping.</AlertDescription>
+                </Alert>
+            ) : (
+                ''
+            )}
+            {validUid === undefined && searchUid !== '' ? (
+                <Alert variant="destructive" className="w-fit mb-7">
+                    <AlertDescription>
+                        There was an error searching for {searchUid}. <br />
+                        Please ensure you have entered a valid UH member and try again.
+                    </AlertDescription>
+                </Alert>
+            ) : (
+                ''
+            )}
+            {searchUid === '' ? (
+                <Alert variant="destructive" className="w-fit mb-7">
+                    <AlertDescription>You must enter a UH member to search.</AlertDescription>
+                </Alert>
+            ) : (
+                ''
+            )}
             <Table className="relative overflow-x-auto">
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -128,92 +166,110 @@ const ManagePersonTable = (data) => {
                         </TableRow>
                     ))}
                 </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id} width={cell.column.columnDef.size}>
-                                    <div className="flex items-center px-2 overflow-hidden whitespace-nowrap">
-                                        <div className={`m-2 ${cell.column.id === 'name' ? 'w-full' : ''}`}>
-                                            {cell.column.id === 'name' && (
-                                                <div className="flex flex-row">
-                                                    <PersonTableTooltip value={'Manage grouping.'} side={'top'}>
-                                                        <Link href={`/groupings/${cell.row.original.path}`}>
-                                                            <ArrowUpRightFromSquare
-                                                                size="1.25em"
-                                                                className="text-text-primary"
-                                                                data-testid={'arrow-up-right-from-square-icon'}
-                                                            />
-                                                        </Link>
-                                                    </PersonTableTooltip>
-                                                    <div className="pl-3">
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </div>
-                                                    <PersonTableTooltip
-                                                        value={"Display the grouping's owners."}
-                                                        side={'right'}
-                                                    >
-                                                        <div className="ml-auto mr-3">
-                                                            <CrownIcon
-                                                                size="1.25em"
-                                                                className="text-text-primary"
-                                                                data-testid={'crown-icon'}
-                                                                onClick={() => testing(cell.row.original.path)}
-                                                            />
+                {
+                    // groupingsInfo === [] || groupingsInfo === undefined || searchUid === '' || searchUid === null ? (
+                    userInfo === undefined ? (
+                        ''
+                    ) : (
+                        <TableBody>
+                            {table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id} width={cell.column.columnDef.size}>
+                                            <div className="flex items-center px-2 overflow-hidden whitespace-nowrap">
+                                                <div className={`m-2 ${cell.column.id === 'name' ? 'w-full' : ''}`}>
+                                                    {cell.column.id === 'name' && (
+                                                        <div className="flex flex-row">
+                                                            <PersonTableTooltip value={'Manage grouping.'} side={'top'}>
+                                                                <Link href={`/groupings/${cell.row.original.path}`}>
+                                                                    <ArrowUpRightFromSquare
+                                                                        size="1.25em"
+                                                                        className="text-text-primary"
+                                                                        data-testid={'arrow-up-right-from-square-icon'}
+                                                                    />
+                                                                </Link>
+                                                            </PersonTableTooltip>
+                                                            <div className="pl-3">
+                                                                {flexRender(
+                                                                    cell.column.columnDef.cell,
+                                                                    cell.getContext()
+                                                                )}
+                                                            </div>
+                                                            <PersonTableTooltip
+                                                                value={"Display the grouping's owners."}
+                                                                side={'right'}
+                                                            >
+                                                                <div className="ml-auto mr-3">
+                                                                    <CrownIcon
+                                                                        size="1.25em"
+                                                                        className="text-text-primary"
+                                                                        data-testid={'crown-icon'}
+                                                                        onClick={() => testing(cell.row.original.path)}
+                                                                    />
+                                                                </div>
+                                                            </PersonTableTooltip>
                                                         </div>
-                                                    </PersonTableTooltip>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                        {cell.column.id === 'inOwner' && (
-                                            <div className="ml-1">
-                                                <p className={`${cell.row.original.inOwner ? 'text-red-500' : ''}`}>
-                                                    {cell.row.original.inOwner ? 'Yes' : 'No'}
-                                                </p>
+                                                {cell.column.id === 'inOwner' && (
+                                                    <div className="ml-1">
+                                                        <p
+                                                            className={`${cell.row.original.inOwner ? 'text-red-500' : ''}`}
+                                                        >
+                                                            {cell.row.original.inOwner ? 'Yes' : 'No'}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {cell.column.id === 'inBasisAndInclude' && (
+                                                    <div>
+                                                        <p
+                                                            className={`${
+                                                                cell.row.original.inBasisAndInclude
+                                                                    ? 'text-red-500'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            {cell.row.original.inBasisAndInclude ? 'Yes' : 'No'}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {cell.column.id === 'inInclude' && (
+                                                    <div className="ml-2">
+                                                        <p
+                                                            className={`${cell.row.original.inInclude ? 'text-red-500' : ''}`}
+                                                        >
+                                                            {cell.row.original.inInclude ? 'Yes' : 'No'}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {cell.column.id === 'inExclude' && (
+                                                    <div className="ml-2">
+                                                        <p
+                                                            className={`${cell.row.original.inExclude ? 'text-red-500' : ''}`}
+                                                        >
+                                                            {cell.row.original.inExclude ? 'Yes' : 'No'}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                                {cell.column.id === 'remove' && (
+                                                    <div className="ml-3">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={row.getIsSelected()}
+                                                            onChange={row.getToggleSelectedHandler()}
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                        {cell.column.id === 'inBasisAndInclude' && (
-                                            <div>
-                                                <p
-                                                    className={`${
-                                                        cell.row.original.inBasisAndInclude ? 'text-red-500' : ''
-                                                    }`}
-                                                >
-                                                    {cell.row.original.inBasisAndInclude ? 'Yes' : 'No'}
-                                                </p>
-                                            </div>
-                                        )}
-                                        {cell.column.id === 'inInclude' && (
-                                            <div className="ml-2">
-                                                <p className={`${cell.row.original.inInclude ? 'text-red-500' : ''}`}>
-                                                    {cell.row.original.inInclude ? 'Yes' : 'No'}
-                                                </p>
-                                            </div>
-                                        )}
-                                        {cell.column.id === 'inExclude' && (
-                                            <div className="ml-2">
-                                                <p className={`${cell.row.original.inExclude ? 'text-red-500' : ''}`}>
-                                                    {cell.row.original.inExclude ? 'Yes' : 'No'}
-                                                </p>
-                                            </div>
-                                        )}
-                                        {cell.column.id === 'remove' && (
-                                            <div className="ml-3">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={row.getIsSelected()}
-                                                    onChange={row.getToggleSelectedHandler()}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                </TableCell>
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
                             ))}
-                        </TableRow>
-                    ))}
-                </TableBody>
+                        </TableBody>
+                    )
+                }
             </Table>
-            <PaginationBar table={table} />
+            {userInfo === undefined ? '' : <PaginationBar table={table} />}
         </>
     );
 };
