@@ -4,9 +4,9 @@ import ManageAdminsTable from '@/app/admin/manage-admins/manageAdminsTable';
 import ManagePersonTable from '@/app/admin/manage-person/managePersonTable';
 import Link from 'next/link';
 
-const Admin = ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const PersonTable = ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     return (
-        <Tabs className="bg-seafoam" defaultValue={`manage-groupings`}>
+        <Tabs className="bg-seafoam" defaultValue={`manage-person`}>
             <div className="container">
                 <TabsList variant="outline">
                     <Link key={'groupings'} href={`/admin/manage-groupings`} replace>
@@ -45,4 +45,4 @@ const Admin = ({ searchParams }: { searchParams: { [key: string]: string | strin
     );
 };
 
-export default Admin;
+export default PersonTable;

@@ -14,9 +14,9 @@ const SearchInput = () => {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-            router.push(`?tab=person&searchUid=${uid}`);
+            router.push(`?searchUid=${uid}`);
         } else if (e.type === 'click') {
-            router.push(`?tab=person&searchUid=${uid}`);
+            router.push(`?searchUid=${uid}`);
         }
     };
     return (

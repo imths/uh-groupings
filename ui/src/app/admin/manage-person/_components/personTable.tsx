@@ -18,9 +18,9 @@ import { useState } from 'react';
 import { ArrowUpRightFromSquare } from 'lucide-react';
 import { CrownIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import SearchInput from '@/app/admin/personTable/_components/searchInput';
+import SearchInput from '@/app/admin/manage-person/_components/searchInput';
 import personTableColumns from '@/components/table/table-element/person-table-columns';
-import PersonTableTooltip from '@/app/admin/personTable/_components/personTableTooltip';
+import PersonTableTooltip from '@/app/admin/manage-person/_components/personTableTooltip';
 import Link from 'next/link';
 import { groupingOwners } from '@/lib/actions';
 import TestingModal from '@/components/modal/testing-modal';
@@ -28,7 +28,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const pageSize = parseInt(process.env.NEXT_PUBLIC_PAGE_SIZE as string);
 
-const ManagePersonTable = (data) => {
+const PersonTable = (data) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState<SortingState>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -274,4 +274,4 @@ const ManagePersonTable = (data) => {
     );
 };
 
-export default ManagePersonTable;
+export default PersonTable;
