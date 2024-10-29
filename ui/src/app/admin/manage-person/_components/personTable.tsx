@@ -35,11 +35,11 @@ const PersonTable = (data) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState([]);
     const [dummyBool, setDummyBool] = useState(false);
+    console.log(data.groupingsInfo);
     const searchUid = data.searchUid;
     const validUid = data.groupingsInfo.resultCode;
     const groupingsInfo = data.groupingsInfo.results;
     const userInfo = data.userInfo;
-    console.log(userInfo);
     const testing = async (path) => {
         setModalData((await groupingOwners(path)).members);
         setModalOpen(true);
@@ -111,7 +111,8 @@ const PersonTable = (data) => {
                             onClick={() => {
                                 // console.log(table.getState().rowSelection);
                                 // console.log(modalOpen);
-                                console.log(table.getState().rowSelection);
+                                // console.log(table.getState().rowSelection);
+                                console.log(table.getSelectedRowModel().rows[0].original.path);
                             }}
                         >
                             Remove
@@ -181,7 +182,11 @@ const PersonTable = (data) => {
                                                     {cell.column.id === 'name' && (
                                                         <div className="flex flex-row">
                                                             <PersonTableTooltip value={'Manage grouping.'} side={'top'}>
-                                                                <Link href={`/groupings/${cell.row.original.path}`}>
+                                                                <Link
+                                                                    href={`/groupings/${cell.row.original.path}`}
+                                                                    rel="noopener noreferrer"
+                                                                    target="_blank"
+                                                                >
                                                                     <ArrowUpRightFromSquare
                                                                         size="1.25em"
                                                                         className="text-text-primary"

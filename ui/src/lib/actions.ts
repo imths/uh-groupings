@@ -167,10 +167,7 @@ export const addAdmin = async (uhIdentifier: string): Promise<GroupingAddResult 
  *
  * @returns The promise of the grouping remove results or ApiError type
  */
-export const removeFromGroups = async (
-    uhIdentifier: string,
-    groupPaths: string[]
-): Promise<GroupingRemoveResults & ApiError> => {
+export const removeFromGroups = async (uhIdentifier: string, groupPaths: string[]): Promise<GroupingRemoveResults> => {
     const currentUser = await getCurrentUser();
     const endpoint = `${baseUrl}/admins/${groupPaths}/${uhIdentifier}`;
     return deleteRequest<GroupingRemoveResults>(endpoint, currentUser.uid);
