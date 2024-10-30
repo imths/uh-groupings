@@ -3,7 +3,7 @@ import AdminsTab from '@/app/admin/@tab/manage-admins/page';
 import GroupingsTab from '@/app/admin/@tab/manage-groupings/page';
 import PersonTab from '@/app/admin/@tab/manage-person/page';
 
-const Admin = () => {
+const AdminDefault = () => {
     return (
         <Tabs className="bg-seafoam" defaultValue="manage-groupings">
             <div className="container">
@@ -38,4 +38,4 @@ const Admin = () => {
     );
 };
 
-export default Admin;
+export default AdminDefault;

@@ -1,9 +1,10 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import AdminsTab from '@/app/admin/@tab/manage-admins/page';
+import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GroupingsTab from '@/app/admin/@tab/manage-groupings/page';
+import AdminsTab from '@/app/admin/@tab/manage-admins/page';
 import PersonTab from '@/app/admin/@tab/manage-person/page';
 
-const Admin = () => {
+const AdminTabsLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <Tabs className="bg-seafoam" defaultValue="manage-groupings">
             <div className="container">
@@ -38,4 +39,4 @@ const Admin = () => {
     );
 };
 
-export default Admin;
+export default AdminTabsLayout;
