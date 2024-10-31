@@ -10,7 +10,9 @@ const PersonTab = async (searchParams) => {
 
     return (
         <>
-            <PersonTable {...props} />
+            <div className="container">
+                <PersonTable {...props} />
+            </div>
         </>
     );
 };

@@ -1,5 +1,9 @@
 const GroupingsTab = () => {
-    return <h1>Testing Groupings</h1>;
+    return (
+        <div className="container">
+            <h1>Testing Admins</h1>
+        </div>
+    );
 };
 
 export default GroupingsTab;

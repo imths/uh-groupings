@@ -1,5 +1,9 @@
 const AdminsTab = () => {
-    return <h1>Testing Admins</h1>;
+    return (
+        <div className="container">
+            <h1>Testing Admins</h1>
+        </div>
+    );
 };
 
 export default AdminsTab;
