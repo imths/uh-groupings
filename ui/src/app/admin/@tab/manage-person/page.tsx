@@ -1,8 +1,8 @@
 import { managePersonResults } from '@/lib/fetchers';
-import PersonTable from '@/app/admin/manage-person/_components/personTable';
+import PersonTable from '@/app/admin/_components/personTable';
 import { memberAttributeResults } from '@/lib/actions';
 
-const ManagePersonTable = async (searchParams) => {
+const PersonTab = async (searchParams) => {
     const searchUid = searchParams.searchParams.searchUid;
     const groupingsInfo = await managePersonResults(searchUid);
     const userInfo = (await memberAttributeResults([searchUid])).results[0];
@@ -15,4 +15,4 @@ const ManagePersonTable = async (searchParams) => {
     );
 };
 
-export default ManagePersonTable;
+export default PersonTab;
