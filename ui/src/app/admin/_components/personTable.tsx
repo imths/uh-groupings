@@ -22,7 +22,8 @@ import SearchInput from '@/app/admin/_components/searchInput';
 import personTableColumns from '@/components/table/table-element/person-table-columns';
 import PersonTableTooltip from '@/app/admin/_components/personTableTooltip';
 import Link from 'next/link';
-import { groupingOwners } from '@/lib/actions';
+import { useRouter } from 'next/navigation';
+import { groupingOwners, removeFromGroups } from '@/lib/actions';
 import TestingModal from '@/components/modal/testing-modal';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -35,7 +36,7 @@ const PersonTable = (data) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState([]);
     const [dummyBool, setDummyBool] = useState(false);
-    console.log(data.groupingsInfo);
+    const router = useRouter();
     const searchUid = data.searchUid;
     const validUid = data.groupingsInfo.resultCode;
     const groupingsInfo = data.groupingsInfo.results;
@@ -47,6 +48,22 @@ const PersonTable = (data) => {
 
     const close = () => {
         setModalOpen(false);
+    };
+
+    const handleRemove = async () => {
+        const test = table.getSelectedRowModel().rows.length;
+        const arr = [];
+        let i = 0;
+        for (i = 0; i < test; i++) {
+            const original = table.getSelectedRowModel().rows[i].original;
+            if (original.inOwner) arr.push(original.path + ':owners');
+            if (original.inInclude) arr.push(original.path + ':include');
+            if (original.inExclude) arr.push(original.path + ':exclude');
+        }
+        await removeFromGroups(searchUid, arr);
+        setRowSelection({});
+        console.log(rowSelection);
+        router.refresh();
     };
 
     const table = useReactTable({
@@ -108,12 +125,13 @@ const PersonTable = (data) => {
                         <Button
                             className="rounded-[-0.25rem] rounded-r-[0.25rem]"
                             variant="destructive"
-                            onClick={() => {
-                                // console.log(table.getState().rowSelection);
-                                // console.log(modalOpen);
-                                // console.log(table.getState().rowSelection);
-                                console.log(table.getSelectedRowModel().rows[0].original.path);
-                            }}
+                            // onClick={() => {
+                            //     // console.log(table.getState().rowSelection);
+                            //     // console.log(modalOpen);
+                            //     // console.log(table.getState().rowSelection);
+                            //     console.log(table.getSelectedRowModel().rows[0].original.path);
+                            // }}
+                            onClick={userInfo === undefined ? () => console.log('test') : handleRemove}
                         >
                             Remove
                         </Button>

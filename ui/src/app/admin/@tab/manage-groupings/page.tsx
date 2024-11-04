@@ -1,7 +1,7 @@
 const GroupingsTab = () => {
     return (
         <div className="container">
-            <h1>Testing Admins</h1>
+            <h1>Testing Groupings</h1>
         </div>
     );
 };
