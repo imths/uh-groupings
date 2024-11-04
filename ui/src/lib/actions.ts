@@ -7,6 +7,7 @@ import {
     Feedback,
     GroupingAddResult,
     GroupingAddResults,
+    GroupingGroupMembers,
     GroupingMoveMemberResult,
     GroupingMoveMembersResult,
     GroupingRemoveResult,
@@ -17,6 +18,7 @@ import {
 import {
     deleteRequest,
     deleteRequestAsync,
+    getRequest,
     postRequest,
     postRequestAsync,
     putRequest,
@@ -115,6 +117,19 @@ export const addExcludeMembersAsync = async (
 };
 
 /**
+ * Get a list of owners in the current path.
+ *
+ * @param groupingPath - The path of the grouping
+ *
+ * @returns The promise of the grouping group members or ApiError type
+ */
+export const groupingOwners = async (groupingPath: string): Promise<GroupingGroupMembers & ApiError> => {
+    const currentUser = await getCurrentUser();
+    const endpoint = `${baseUrl}/grouping/${groupingPath}/owners`;
+    return getRequest<GroupingGroupMembers>(endpoint, currentUser.uid);
+};
+
+/**
  * Add an owner to the owners group of a grouping.
  *
  * @param uhIdentifiers - The uhIdentifiers to add to owners
@@ -152,10 +167,7 @@ export const addAdmin = async (uhIdentifier: string): Promise<GroupingAddResult 
  *
  * @returns The promise of the grouping remove results or ApiError type
  */
-export const removeFromGroups = async (
-    uhIdentifier: string,
-    groupPaths: string[]
-): Promise<GroupingRemoveResults & ApiError> => {
+export const removeFromGroups = async (uhIdentifier: string, groupPaths: string[]): Promise<GroupingRemoveResults> => {
     const currentUser = await getCurrentUser();
     const endpoint = `${baseUrl}/admins/${groupPaths}/${uhIdentifier}`;
     return deleteRequest<GroupingRemoveResults>(endpoint, currentUser.uid);
@@ -232,7 +244,7 @@ export const removeAdmin = async (uhIdentifier: string): Promise<GroupingRemoveR
  *
  * @returns The promise of the member attribute results or ApiError type
  */
-export const memberAttributeResults = async (uhIdentifiers: string[]): Promise<MemberAttributeResults & ApiError> => {
+export const memberAttributeResults = async (uhIdentifiers: string[]): Promise<MemberAttributeResults> => {
     const currentUser = await getCurrentUser();
     const endpoint = `${baseUrl}/members`;
     return postRequest<MemberAttributeResults>(endpoint, currentUser.uid, uhIdentifiers);
