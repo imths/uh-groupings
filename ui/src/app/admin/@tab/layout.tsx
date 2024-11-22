@@ -6,13 +6,9 @@ import { usePathname } from 'next/navigation';
 
 const AdminTabsLayout = ({ children }: { children: React.ReactNode }) => {
     const currentPath = usePathname().split('/').pop();
-    console.log(currentPath);
     return (
         <>
-            <Tabs
-                className="bg-seafoam"
-                defaultValue={currentPath === 'admin' ? 'manage-groupings' : currentPath.toString()}
-            >
+            <Tabs className="bg-seafoam" value={currentPath === 'admin' ? 'manage-groupings' : currentPath.toString()}>
                 <div className="container">
                     <TabsList variant="outline">
                         <Link key={'groupings'} href={`/admin/manage-groupings`}>

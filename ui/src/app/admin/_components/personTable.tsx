@@ -199,19 +199,25 @@ const PersonTable = (data) => {
                                                 <div className={`m-2 ${cell.column.id === 'name' ? 'w-full' : ''}`}>
                                                     {cell.column.id === 'name' && (
                                                         <div className="flex flex-row">
-                                                            <PersonTableTooltip value={'Manage grouping.'} side={'top'}>
-                                                                <Link
-                                                                    href={`/groupings/${cell.row.original.path}`}
-                                                                    rel="noopener noreferrer"
-                                                                    target="_blank"
-                                                                >
-                                                                    <ArrowUpRightFromSquare
-                                                                        size="1.25em"
-                                                                        className="text-text-primary"
-                                                                        data-testid={'arrow-up-right-from-square-icon'}
-                                                                    />
-                                                                </Link>
-                                                            </PersonTableTooltip>
+                                                            <PersonTableTooltip
+                                                                value={'Manage grouping.'}
+                                                                side={'top'}
+                                                                test={
+                                                                    <Link
+                                                                        href={`/groupings/${cell.row.original.path}`}
+                                                                        rel="noopener noreferrer"
+                                                                        target="_blank"
+                                                                    >
+                                                                        <ArrowUpRightFromSquare
+                                                                            size="1.25em"
+                                                                            className="text-text-primary"
+                                                                            data-testid={
+                                                                                'arrow-up-right-from-square-icon'
+                                                                            }
+                                                                        />
+                                                                    </Link>
+                                                                }
+                                                            ></PersonTableTooltip>
                                                             <div className="pl-3">
                                                                 {flexRender(
                                                                     cell.column.columnDef.cell,
@@ -221,16 +227,19 @@ const PersonTable = (data) => {
                                                             <PersonTableTooltip
                                                                 value={"Display the grouping's owners."}
                                                                 side={'right'}
-                                                            >
-                                                                <div className="ml-auto mr-3">
-                                                                    <CrownIcon
-                                                                        size="1.25em"
-                                                                        className="text-text-primary"
-                                                                        data-testid={'crown-icon'}
-                                                                        onClick={() => testing(cell.row.original.path)}
-                                                                    />
-                                                                </div>
-                                                            </PersonTableTooltip>
+                                                                test={
+                                                                    <div className="ml-auto mr-3">
+                                                                        <CrownIcon
+                                                                            size="1.25em"
+                                                                            className="text-text-primary"
+                                                                            data-testid={'crown-icon'}
+                                                                            onClick={() =>
+                                                                                testing(cell.row.original.path)
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                }
+                                                            ></PersonTableTooltip>
                                                         </div>
                                                     )}
                                                 </div>

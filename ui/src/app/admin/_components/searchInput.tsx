@@ -26,15 +26,14 @@ const SearchInput = () => {
                     <Input
                         type="search"
                         className="rounded-[-0.25rem] rounded-l-[0.25rem]"
+                        maxLength={8}
                         placeholder={searchUid === null || searchUid === '' ? 'UH Username' : searchUid}
                         onChange={(e) => setUid(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
-                    {/*<Link href={`?tab=person&searchUid=${uid}`}>*/}
                     <Button className="rounded-[-0.25rem] rounded-r-[0.25rem] pr-3" onClick={handleKeyDown}>
                         Search
                     </Button>
-                    {/*</Link>*/}
                 </div>
             </label>
         </>
