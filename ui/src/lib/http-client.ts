@@ -1,7 +1,6 @@
-import { sendStackTrace } from './actions';
-import { getUser } from '@/lib/access/user';
+import {sendStackTrace} from './actions';
+import {getUser} from '@/lib/access/user';
 
-const maxRetries = 3;
 const baseUrl = process.env.NEXT_PUBLIC_API_2_1_BASE_URL as string;
 
 enum HTTPMethod {
@@ -34,7 +33,7 @@ const delay = async (ms = 5000) => new Promise((res) => setTimeout(res, ms));
  */
 const poll = async <T>(jobId: number): Promise<T> => {
     const currentUser = await getUser();
-    return await fetch(`${baseUrl}/jobs/${jobId}`, { headers: { current_user: currentUser.uid } })
+    return await fetch(`${baseUrl}/jobs/${jobId}`, {headers: {current_user: currentUser.uid}})
         .then((res) => handleFetch(res, HTTPMethod.GET))
         .then(async (res) => {
             if (res.status === Status.COMPLETED) {
@@ -55,7 +54,7 @@ const poll = async <T>(jobId: number): Promise<T> => {
  * @returns The promise of type T
  */
 export const getRequest = async <T>(endpoint: string, currentUserKey: string = ''): Promise<T> =>
-    await fetch(endpoint, { headers: { current_user: currentUserKey } })
+    await fetch(endpoint, {headers: {current_user: currentUserKey}})
         .then((res) => handleFetch(res, HTTPMethod.GET))
         .catch((err) => err);
 
@@ -110,39 +109,6 @@ export const postRequestAsync = async <T>(
     })
         .then((res) => handleFetch(res, HTTPMethod.POST))
         .then((res) => poll<T>(res))
-        .catch((err) => err);
-
-/**
- * Perform a POST request to the specified URL with retries on error with incremental backoff.
- *
- * @param endpoint - the URL to perform the request on
- * @param currentUserKey - the uhIdentifier of the current user
- * @param body - the request body to perform the request with
- *
- * @returns The promise of type T
- */
-export const postRequestRetry = async <T>(
-    endpoint: string,
-    currentUserKey: string,
-    body?: object | string | string[],
-    contentType = 'application/json',
-    retries: number = maxRetries
-): Promise<T> =>
-    await fetch(endpoint, {
-        method: HTTPMethod.POST,
-        headers: {
-            current_user: currentUserKey,
-            'Content-Type': contentType
-        },
-        body: stringifyBody(body)
-    })
-        .then(async (res) => {
-            if (res.status === 500 && retries > 0) {
-                await delay(2000 * Math.log(maxRetries / retries));
-                return postRequestRetry(endpoint, currentUserKey, body, contentType, retries - 1);
-            }
-            return handleFetch(res, HTTPMethod.POST);
-        })
         .catch((err) => err);
 
 /**
